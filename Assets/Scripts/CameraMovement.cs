@@ -4,15 +4,26 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public Vector2 distance;
+    public Player player;
     void Start()
     {
-        
+        player.OnFollowingPlayer += FollowPlayer;
     }
-
+    private void OnDestroy()
+    {
+        player.OnFollowingPlayer -= FollowPlayer;
+    }
     // Update is called once per frame
     void Update()
     {
-        
+    }
+    void FollowPlayer()
+    {
+        Vector3 pos;
+        pos = player.transform.position;
+        pos.z += distance.x;
+        pos.y -= distance.y;
+        transform.position = pos;
     }
 }
