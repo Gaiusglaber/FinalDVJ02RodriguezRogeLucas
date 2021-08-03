@@ -11,6 +11,7 @@ public class EndScene : MonoBehaviour
     public GameObject win;
     public GameObject lose;
     public Text ScoreText;
+    public Text DistanceText;
     private int SceneIndex;
     private void Start()
     {
@@ -23,6 +24,7 @@ public class EndScene : MonoBehaviour
             lose.SetActive(true);
         }
         ScoreText.text = SceneManagment.GetInstance().highscore.ToString();
+        DistanceText.text = ((int)SceneManagment.GetInstance().distance).ToString();
     }
     private void Update()
     {

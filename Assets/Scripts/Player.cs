@@ -85,6 +85,7 @@ public class Player : MonoBehaviour,IDestructible
     }
     void OnDisable()
     {
+        SceneManagment.GetInstance().distance = transform.position.x+ transform.position.z;
         Destroy();
         OnPlayerDestroyed?.Invoke();
     } 
