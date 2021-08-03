@@ -10,18 +10,24 @@ public class GameManager : MonoBehaviour
     static public GameManager GetInstance() { return instance; }
     #endregion
     public Player player;
+    public UIManager uimanager;
     public delegate void OnGameEnded();
     public static event OnGameEnded PlayerDeath;
     // Start is called before the first frame update
     void Start()
     {
         player.OnPlayerDestroyed += EndGame;
-        
+        uimanager.OnResetScore += ResetScore;
     }
     private void OnDisable()
     {
         PlayerDeath?.Invoke();
         player.OnPlayerDestroyed -= EndGame;
+        uimanager.OnResetScore -= ResetScore;
+    }
+    public void ResetScore()
+    {
+        SceneManagment.GetInstance().highscore = 0;
     }
     void EndGame()
     {
