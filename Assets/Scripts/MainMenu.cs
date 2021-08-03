@@ -36,6 +36,7 @@ public class MainMenu : MonoBehaviour
     }
     public void InputController()
     {
+
         if (Input.GetKey(KeyCode.KeypadEnter) || Input.GetKey("enter") || pressed)
         {
             animatorPlayButton.SetTrigger("Selected");

@@ -7,6 +7,15 @@ public class Shell : MonoBehaviour,IDestructible
     public GameObject explotionPrefab;
     public void OnCollisionEnter(Collision collision)
     {
+        if (collision.transform.CompareTag("Bomb"))
+        {
+            Destroy(collision.gameObject);
+            SceneManagment.GetInstance().highscore += 200;
+        }else if (collision.transform.CompareTag("Box"))
+        {
+            SceneManagment.GetInstance().highscore += 50;
+            Destroy(collision.gameObject);
+        }
         Destroy();
         Destroy(gameObject);
     }

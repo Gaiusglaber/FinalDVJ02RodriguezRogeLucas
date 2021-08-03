@@ -11,25 +11,41 @@ public class Player : MonoBehaviour,IDestructible
     private const string HORIZONTAL = "Horizontal";
     private const string VERTICAL = "Vertical";
 
+    public GameObject explotionPrefab;
+
     private float horizontalInput;
     private float verticalInput;
     private float currentSteerAngle;
     private float currentbreakForce;
     private bool isBreaking;
 
+    [SerializeField]public Vector3 Spawnpoint;
+
     [SerializeField] private float motorForce;
     [SerializeField] private float breakForce;
     [SerializeField] private float maxSteerAngle;
 
+    [SerializeField] private Rigidbody playerspeed;
     [SerializeField] private WheelCollider frontLeftWheelCollider;
     [SerializeField] private WheelCollider frontRightWheelCollider;
     [SerializeField] private WheelCollider rearLeftWheelCollider;
     [SerializeField] private WheelCollider rearRightWheelCollider;
+    private void Start()
+    {
+        Spawnpoint = transform.position;
+    }
     private void FixedUpdate()
     {
-        GetInput();
-        HandleMotor();
-        HandleSteering();
+        if (GameManager.GetInstance() != null && !GameManager.GetInstance().pause)
+        {
+            GetInput();
+            HandleMotor();
+            HandleSteering();
+        }
+        else
+        {
+            playerspeed.velocity = new Vector3(0,0,0);
+        }
     }
     private void GetInput()
     {
@@ -63,19 +79,25 @@ public class Player : MonoBehaviour,IDestructible
     // Update is called once per frame
     void Update()
     {
+        if ((this.transform.rotation.x >0.9f || this.transform.rotation.x < -0.9f))
+            Destroy(gameObject);
         OnFollowingPlayer?.Invoke();
-        /*if (Physics.Raycast(transform.position, -Vector3.up, out RaycastHit hit, LayerMask.NameToLayer("Ground")))
-        {
-            Quaternion quatDestiny = Quaternion.FromToRotation(transform.up, hit.normal) * transform.rotation;
-        }*/
     }
-    void OnDestroy()
+    void OnDisable()
     {
         Destroy();
         OnPlayerDestroyed?.Invoke();
+    } 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.transform.CompareTag("Bomb"))
+        {
+            Destroy(gameObject);
+        }
     }
     public void Destroy()
     {
-
+        if (!this.gameObject.scene.isLoaded) return;
+        Instantiate(explotionPrefab, new Vector3(transform.position.x, transform.position.y + 1, transform.position.z), Quaternion.identity);
     }
 }

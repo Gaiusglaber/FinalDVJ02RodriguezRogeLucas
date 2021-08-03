@@ -18,8 +18,11 @@ public class Turret : MonoBehaviour,IShootable
     // Update is called once per frame
     void Update()
     {
-        RotateTurret();
-        Shoot();
+        if (GameManager.GetInstance() != null && !GameManager.GetInstance().pause)
+        {
+            RotateTurret();
+            Shoot();
+        }
     }
     public void Shoot()
     {

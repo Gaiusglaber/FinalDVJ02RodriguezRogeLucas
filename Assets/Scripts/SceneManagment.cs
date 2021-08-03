@@ -24,6 +24,7 @@ public class SceneManagment : MonoBehaviour
     #endregion
     public int highscore;
     public bool win;
+    public float distance;
     private void Start()
     {
         GameManager.PlayerDeath += GameOver;
@@ -31,6 +32,7 @@ public class SceneManagment : MonoBehaviour
 
     public void GameOver()
     {
+        
         GameObject animatorScene = GameObject.FindGameObjectWithTag("SceneTransition");
         if (animatorScene != null)
         {

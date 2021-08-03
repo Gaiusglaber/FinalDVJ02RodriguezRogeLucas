@@ -8,11 +8,13 @@ public class UIManager : MonoBehaviour
 {
     public delegate void ResetingScore();
     public event ResetingScore OnResetScore;
-
+    public delegate void WinCondition();
+    public event WinCondition OnWin;
     public GameObject resumeButton;
     public GameObject backButton;
     public Player player;
     public Text time;
+    public Text score;
     public Animator animatorScene;
     private int SceneIndex;
     private float seconds=0;
@@ -30,7 +32,13 @@ public class UIManager : MonoBehaviour
             minutes++;
         }
         time.text = minutes.ToString() + ": " + ((int)(seconds)).ToString()+ "/2:00";
-        SceneFade();
+        if (minutes == 2)
+        {
+            SceneManagment.GetInstance().win = true;
+            OnWin?.Invoke();
+        }
+        score.text = SceneManagment.GetInstance().highscore.ToString();
+        //SceneFade();
     }
     public void SceneFade()
     {
@@ -42,6 +50,7 @@ public class UIManager : MonoBehaviour
     }
     public void PauseButtonPressed()
     {
+        GameManager.GetInstance().pause = true;
         resumeButton.SetActive(true);
         backButton.SetActive(true);
     }
@@ -63,10 +72,13 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSeconds(1);
         OnResetScore?.Invoke();
         FadeLevel(SceneManager.GetActiveScene().buildIndex - 2);
+        yield return new WaitForSeconds(2);
+        SceneFade();
         yield return null;
     }
     void Resume()
     {
+        GameManager.GetInstance().pause = false;
         resumeButton.SetActive(false);
         backButton.SetActive(false);
     }
